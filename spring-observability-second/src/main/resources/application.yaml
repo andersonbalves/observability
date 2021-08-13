@@ -1,0 +1,61 @@
+topic:
+  name: users
+  partitions-num: 3
+  replication-factor: 1
+server:
+  port: 9081
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:tracing:h2:mem:resource
+    driverClassName: io.opentracing.contrib.jdbc.TracingDriver
+    username: resource
+    password:
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  application:
+    name: spring-kafka-example-second
+  kafka:
+    bootstrap-servers: localhost:29092
+    properties:
+      schema.registry.url: http://localhost:8081
+    consumer:
+      group-id: group_id_2
+      auto-offset-reset: latest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        specific.avro.reader: true
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+    template:
+      default-topic:
+opentracing:
+  jaeger:
+    enable-b3-propagation: true
+    enable-w3c-propagation: true
+    service-name: spring-kafka-example-second
+    udp-sender:
+      host: localhost
+      port: 6831
+    sampler-type: const
+    sampler-param: 1
+    log-spans: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
+logging:
+  level:
+    io:
+      jaegertracing: DEBUG

@@ -1,0 +1,117 @@
+version: '3.3'
+
+services:
+#  api:
+#    container_name: api
+#    restart: always
+#    build:
+#      context: .
+#    ports:
+#      - 8080:8080
+#    logging:
+#      driver: gelf
+#      options:
+#        gelf-address: udp://localhost:12201
+#    links:
+#      - logstash:logstash
+#    depends_on:
+#      - logstash
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.1.1
+    container_name: zookeeper
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    healthcheck:
+      test: "echo stat | nc localhost $$ZOOKEEPER_CLIENT_PORT"
+      start_period: 30s
+
+  kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    container_name: kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+      start_period: 30s
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:6.1.1
+    container_name: schema-registry
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    healthcheck:
+      test: "curl -f http://localhost:8081 || exit 1"
+      start_period: 1m
+
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command: --config.file=/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:7.5.5-ubuntu
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:2.2.1
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    depends_on:
+      - promtail
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.22
+    container_name: jaeger
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+    depends_on:
+      - api
+
+  collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: opentelemetry-collector
+    command: [ "--config=/conf/collector-config.yaml", "--log-level=DEBUG" ]
+    volumes:
+      - ./collector-config.yaml:/conf/collector-config.yaml
+    ports:
+      - "9464:9464"
+      - "55680:55680"
+      - "55681:55681"
+    depends_on:
+      - jaeger

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <description>Demo project for Spring Boot</description>
+  <groupId>br.com.baratella.kafka</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>spring-observability-first</name>
+  <version>0.0.1</version>
+  <artifactId>spring-observability-first</artifactId>
+
+  <parent>
+    <artifactId>spring-kafka-observability-parent</artifactId>
+    <groupId>br.com.baratella.kafka</groupId>
+    <version>0.0.1</version>
+  </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+
+      <plugin>
+        <artifactId>avro-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <outputDirectory>${project.build.directory}/generated-sources
+              </outputDirectory> <!-- <5> -->
+              <sourceDirectory>src/main/avro</sourceDirectory>
+              <stringType>String</stringType>
+            </configuration>
+            <goals>
+              <goal>schema</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.avro</groupId>
+        <version>1.10.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
