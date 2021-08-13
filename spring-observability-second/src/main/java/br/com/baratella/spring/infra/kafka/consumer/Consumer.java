@@ -9,7 +9,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 @KafkaListener(
     topics = "users",
@@ -22,6 +21,6 @@ public class Consumer {
 
   @KafkaHandler(isDefault = true)
   public void consume(User record) {
-    log.info(String.format("Consumed message -> %s", record));
+
   }
 }

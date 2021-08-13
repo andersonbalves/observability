@@ -12,9 +12,17 @@
 
   <parent>
     <artifactId>spring-kafka-observability-parent</artifactId>
-    <groupId>br.com.baratella.kafka</groupId>
+    <groupId>br.com.baratella</groupId>
     <version>0.0.1</version>
   </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>br.com.baratella.aop</groupId>
+      <artifactId>spring-aop-logger</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>

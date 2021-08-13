@@ -9,7 +9,7 @@
     <version>2.4.9</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>br.com.baratella.kafka</groupId>
+  <groupId>br.com.baratella</groupId>
   <artifactId>spring-kafka-observability-parent</artifactId>
   <version>0.0.1</version>
   <name>spring-kafka-observability-parent</name>
@@ -26,6 +26,7 @@
   <modules>
     <module>spring-observability-first</module>
     <module>spring-observability-second</module>
+    <module>spring-aop-logger</module>
   </modules>
 
   <dependencies>

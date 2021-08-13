@@ -69,7 +69,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
     command: --config.file=/etc/prometheus/prometheus.yml
 
   grafana:
@@ -79,15 +79,6 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
-
-  loki:
-    image: grafana/loki:2.2.1
-    container_name: loki
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    depends_on:
-      - promtail
 
   jaeger:
     image: jaegertracing/all-in-one:1.22
@@ -100,15 +91,13 @@ services:
       - "16686:16686"
       - "14268:14268"
       - "14250:14250"
-    depends_on:
-      - api
 
   collector:
     image: otel/opentelemetry-collector:latest
     container_name: opentelemetry-collector
     command: [ "--config=/conf/collector-config.yaml", "--log-level=DEBUG" ]
     volumes:
-      - ./collector-config.yaml:/conf/collector-config.yaml
+      - ./conf/collector-config.yaml:/conf/collector-config.yaml
     ports:
       - "9464:9464"
       - "55680:55680"

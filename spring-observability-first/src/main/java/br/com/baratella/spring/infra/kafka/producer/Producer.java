@@ -33,7 +33,6 @@ public class Producer {
         log.error(ex);
       }
     });
-    log.info(String.format("Produced user -> %s", user));
   }
 
 }

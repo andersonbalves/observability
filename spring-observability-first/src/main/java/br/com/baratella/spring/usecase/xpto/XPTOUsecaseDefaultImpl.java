@@ -1,5 +1,6 @@
 package br.com.baratella.spring.usecase.xpto;
 
+import br.com.baratella.logger.annotation.LogMethod;
 import br.com.baratella.spring.usecase.xpto.repository.IXPTOUserAdapterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ public class XPTOUsecaseDefaultImpl implements IXPTOUsecase {
 
   private final IXPTOUserAdapterRepository repositoryAdapter;
 
+  @LogMethod
   public XPTOUserDTOResponse execute(XPTOUserDTORequest user) throws InterruptedException {
     if ("sleep".equalsIgnoreCase(user.getName())) {
       Thread.sleep(2000);

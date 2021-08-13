@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/user")
-@Log4j2
 @RequiredArgsConstructor
 public class KafkaController {
 
@@ -23,7 +22,6 @@ public class KafkaController {
   @CrossOrigin
   @PostMapping
   public void postUser(@RequestBody UserRequestDTO user) {
-    log.info("request no serviço 1");
     if (StringUtils.isEmpty(user.getName())) {
       throw new IllegalArgumentException("Parâmetro \"name\" não pode ser vazio");
     }
