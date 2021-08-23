@@ -1,7 +1,7 @@
 package br.com.baratella.spring.adapter.repository;
 
-import br.com.baratella.spring.infra.kafka.database.entity.UserEntity;
-import br.com.baratella.spring.infra.kafka.database.repository.UserRepository;
+import br.com.baratella.spring.infra.database.entity.UserEntity;
+import br.com.baratella.spring.infra.database.repository.UserRepository;
 import br.com.baratella.spring.usecase.xpto.XPTOUserDTORequest;
 import br.com.baratella.spring.usecase.xpto.XPTOUserDTOResponse;
 import br.com.baratella.spring.usecase.xpto.repository.IXPTOUserAdapterRepository;

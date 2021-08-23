@@ -16,14 +16,6 @@
     <version>0.0.1</version>
   </parent>
 
-  <dependencies>
-    <dependency>
-      <groupId>br.com.baratella.aop</groupId>
-      <artifactId>spring-aop-logger</artifactId>
-      <version>0.0.1</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>

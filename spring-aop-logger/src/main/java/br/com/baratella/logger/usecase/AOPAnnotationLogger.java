@@ -1,7 +1,9 @@
 package br.com.baratella.logger.usecase;
 
 import br.com.baratella.logger.entity.LoggerDTO;
+import io.opentracing.Span;
 import io.opentracing.Tracer;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,11 @@ public class AOPAnnotationLogger {
   @Around("annotatedMethodPointcut()")
   public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
     LoggerDTO dto = new LoggerDTO(joinPoint, tracer);
+    Span span = tracer.buildSpan(joinPoint.getTarget().getClass().getSimpleName() + "." + joinPoint.getSignature().getName()).start();
+    span.setTag("class-name", dto.getClassName());
+    span.setTag("method", dto.getMethod());
+    Arrays.stream(joinPoint.getArgs()).
+        forEach(e -> span.setTag(e.getClass().getSimpleName(), new ObjectMessage(e).getFormat()));
 
     log.info("-> Método " + dto.getMethod() + " iniciado com as seguintes informações:\n"
         + new ObjectMessage(dto).getFormattedMessage());
@@ -41,7 +48,7 @@ public class AOPAnnotationLogger {
     log.info("<- O método " + dto.getMethod() + " levou " +
         (endTime - startTime) + "ms e retornou:\n" + new ObjectMessage(result)
         .getFormattedMessage());
-
+    span.finish();
     return result;
   }
 

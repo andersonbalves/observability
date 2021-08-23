@@ -1,7 +1,8 @@
 package br.com.baratella.spring.usecase.xpto;
 
-import br.com.baratella.logger.annotation.LogMethod;
+import br.com.baratella.logger.entity.annotation.LogMethod;
 import br.com.baratella.spring.usecase.xpto.repository.IXPTOUserAdapterRepository;
+import io.opentracing.Tracer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class XPTOUsecaseDefaultImpl implements IXPTOUsecase {
 
   private final IXPTOUserAdapterRepository repositoryAdapter;
+  private final Tracer tracer;
 
   @LogMethod
   public XPTOUserDTOResponse execute(XPTOUserDTORequest user) throws InterruptedException {

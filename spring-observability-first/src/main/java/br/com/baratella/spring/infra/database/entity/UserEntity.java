@@ -1,4 +1,4 @@
-package br.com.baratella.spring.infra.kafka.database.entity;
+package br.com.baratella.spring.infra.database.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

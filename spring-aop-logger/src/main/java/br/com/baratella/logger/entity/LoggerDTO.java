@@ -22,11 +22,13 @@ public class LoggerDTO {
   private String className;
   private String method;
   private Map<String, Object> params;
+  private Tracer tracer;
 
   public LoggerDTO(JoinPoint joinPoint, Tracer tracer) {
     this.setClassName(joinPoint.getTarget().getClass().getName());
     this.setMethod(getCompleteMethodSignature(joinPoint));
-    this.setParams(buildParamsMap(joinPoint, tracer));
+    this.setParams(buildParamsMap(joinPoint));
+    this.tracer = tracer;
   }
 
   private static String getCompleteMethodSignature(JoinPoint joinPoint) {
@@ -52,7 +54,7 @@ public class LoggerDTO {
     return methodSignature;
   }
 
-  private static Map<String, Object> buildParamsMap(JoinPoint joinPoint, Tracer tracer) {
+  private static Map<String, Object> buildParamsMap(JoinPoint joinPoint) {
     String[] argNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
     Object[] values = joinPoint.getArgs();
     Map<String, Object> params = new HashMap<>();
@@ -61,7 +63,6 @@ public class LoggerDTO {
         params.put(argNames[i], values[i]);
       }
     }
-    params.put("tracer-properties", tracer);
     return params;
   }
 

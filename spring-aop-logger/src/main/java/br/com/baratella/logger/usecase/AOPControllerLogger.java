@@ -2,6 +2,7 @@ package br.com.baratella.logger.usecase;
 
 import br.com.baratella.logger.entity.LoggerDTO;
 import io.opentracing.Tracer;
+import java.util.Arrays;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,10 @@ public class AOPControllerLogger {
   @Around("restControllerPointcut()")
   public Object logController(ProceedingJoinPoint joinPoint) throws Throwable {
     LoggerDTO dto = new LoggerDTO(joinPoint, tracer);
+    tracer.activeSpan().setTag("class-name", dto.getClassName());
+    tracer.activeSpan().setTag("method", dto.getMethod());
+    Arrays.stream(joinPoint.getArgs()).
+        forEach(e -> tracer.activeSpan().setTag(e.getClass().getSimpleName(), new ObjectMessage(e).getFormat()));
 
     log.info("-> Método " + dto.getMethod() + " iniciado com as seguintes informações:\n"
         + new ObjectMessage(dto).getFormattedMessage());

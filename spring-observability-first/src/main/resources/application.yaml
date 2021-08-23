@@ -42,8 +42,10 @@ spring:
       default-topic:
 opentracing:
   jaeger:
+    enabled: true
     enable-b3-propagation: true
     enable-w3c-propagation: true
+    expand-exception-logs: true
     service-name: spring-kafka-example-first
     udp-sender:
       host: localhost

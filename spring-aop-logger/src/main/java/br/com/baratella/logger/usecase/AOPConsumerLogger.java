@@ -1,7 +1,11 @@
 package br.com.baratella.logger.usecase;
 
 import br.com.baratella.logger.entity.LoggerDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.google.gson.JsonObject;
 import io.opentracing.Tracer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +35,15 @@ public class AOPConsumerLogger {
   private void consumerMethodPointcut() {
   }
 
+
   @Before("consumerClassPointcut() || consumerMethodPointcut()")
   public void logBefore(JoinPoint joinPoint) throws Throwable {
     LoggerDTO dto = new LoggerDTO(joinPoint, tracer);
+    tracer.activeSpan().setTag("class-name", dto.getClassName());
+    tracer.activeSpan().setTag("method", dto.getMethod());
+    Arrays.stream(joinPoint.getArgs()).
+        forEach(e -> tracer.activeSpan().setTag(e.getClass().getSimpleName(), new ObjectMessage(e).getFormat()));
+
 
     log.info("-> Método " + dto.getMethod() + " iniciado com as seguintes informações:\n"
         + new ObjectMessage(dto).getFormattedMessage());
