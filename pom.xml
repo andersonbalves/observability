@@ -26,7 +26,6 @@
   <modules>
     <module>spring-observability-first</module>
     <module>spring-observability-second</module>
-    <module>spring-aop-logger</module>
   </modules>
 
   <dependencies>
@@ -114,20 +113,26 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>io.opentracing.contrib</groupId>-->
+<!--      <artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>-->
+<!--      <version>3.3.1</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>io.opentracing.contrib</groupId>-->
+<!--      <artifactId>opentracing-spring-cloud-starter</artifactId>-->
+<!--      <version>0.5.9</version>-->
+<!--    </dependency>-->
+
     <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>
-      <version>3.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-cloud-starter</artifactId>
-      <version>0.5.9</version>
+      <groupId>br.com.baratella.logger.aspect</groupId>
+      <artifactId>aspect-logger-opentelemetry-spring</artifactId>
+      <version>0.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>br.com.baratella.logger.aspect</groupId>
-      <artifactId>aspect-logger-opentracing-spring</artifactId>
+      <artifactId>aspect-logger-spring</artifactId>
       <version>0.0.1</version>
     </dependency>
 

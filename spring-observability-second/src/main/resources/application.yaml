@@ -9,8 +9,9 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:tracing:h2:mem:resource
-    driverClassName: io.opentracing.contrib.jdbc.TracingDriver
+    #    url: jdbc:tracing:h2:mem:resource
+    #    driverClassName: io.opentracing.contrib.jdbc.TracingDriver
+    driverClassName: org.h2.Driver
     username: resource
     password:
   jpa:

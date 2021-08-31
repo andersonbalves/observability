@@ -1,12 +1,7 @@
 package br.com.baratella.spring.infra.kafka.config;
 
-import io.jaegertracing.internal.JaegerSpan;
-import io.jaegertracing.internal.JaegerTracer;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import io.opentracing.log.Fields;
-import io.opentracing.tag.Tag;
-import io.opentracing.tag.Tags;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.StatusCode;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +17,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomKafkaListenerErrorHandler implements KafkaListenerErrorHandler {
 
-  private final JaegerTracer tracer;
+//  private final JaegerTracer tracer;
 
   @Override
   public Object handleError(Message<?> message, ListenerExecutionFailedException e) {
-    Map<String, Object> messageMap = new HashMap<>();
-    messageMap.put("message", message);
-    messageMap.put("tracer", tracer);
-    messageMap.put(Fields.ERROR_OBJECT, e);
-    log.error(new ObjectMessage(messageMap).getFormattedMessage(), e);
+    Span.current().setStatus(StatusCode.ERROR, e.getMessage());
+    log.error(new ObjectMessage(message).getFormattedMessage(), e);
     return null;
   }
 }
