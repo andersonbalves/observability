@@ -1,10 +1,8 @@
 package br.com.baratella.spring;
 
-import io.opentracing.contrib.spring.tracer.configuration.TracerAutoConfiguration;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 

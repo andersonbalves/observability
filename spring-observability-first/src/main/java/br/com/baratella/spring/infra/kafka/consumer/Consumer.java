@@ -8,9 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-@Service
+@Controller
 @RequiredArgsConstructor
 @KafkaListener(
     topics = "users",
